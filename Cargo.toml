@@ -1,0 +1,8 @@
+[package]
+name = "parse-results"
+version = "0.1.0"
+authors = ["Ben Gesoff <ben.gesoff@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+nom = "^4.1"
