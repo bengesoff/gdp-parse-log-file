@@ -54,13 +54,13 @@ named!(transmission_attempt<&str, Attempt>,
         tag!("--") >>
         attempt_number: hex_packet >>
         comma >>
-        corrupted: hex_packet >>
-        comma >>
         uncorrupted: hex_packet >>
         comma >>
-        error: map_res!(digit, to_bool) >>
+        corrupted: hex_packet >>
         comma >>
-        detected_error: map_res!(digit, to_bool) >>
+        detected_error: map_res!(digit, to_flipped_bool) >>
+        comma >>
+        error: map_res!(digit, to_flipped_bool) >>
         opt!(line_ending) >>
         (Attempt {
             attempt_number,
@@ -106,10 +106,11 @@ fn from_hex(input: &str) -> Result<u32, std::num::ParseIntError> {
     u32::from_str_radix(input, 16)
 }
 
-fn to_bool(input: &str) -> Result<bool, u32> {
+// Converts a 1 or a 0 string to a bool but flips the result!
+fn to_flipped_bool(input: &str) -> Result<bool, u32> {
     match input {
-        "0" => Ok(false),
-        "1" => Ok(true),
+        "0" => Ok(true),
+        "1" => Ok(false),
         _ => Err(0)
     }
 }
@@ -134,10 +135,10 @@ fn parse_header() {
 fn parse_attempt() {
     assert_eq!(transmission_attempt("--0,17a883,17a983,0,0\n"), Ok(("", Attempt {
         attempt_number: 0,
-        corrupted: 0x17a883,
-        uncorrupted: 0x17a983,
-        error: false,
-        detected_error: false
+        uncorrupted: 0x17a883,
+        corrupted: 0x17a983,
+        error: true,
+        detected_error: true
     })));
 }
 
@@ -151,16 +152,16 @@ fn parse_transmission() {
         },
         attempts: vec![Attempt {
             attempt_number: 0,
-            corrupted: 0x17a883,
-            uncorrupted: 0x17a983,
-            error: false,
-            detected_error: false
+            uncorrupted: 0x17a883,
+            corrupted: 0x17a983,
+            error: true,
+            detected_error: true
         }, Attempt {
             attempt_number: 0,
-            corrupted: 0x17a883,
-            uncorrupted: 0x17a983,
-            error: false,
-            detected_error: false
+            uncorrupted: 0x17a883,
+            corrupted: 0x17a983,
+            error: true,
+            detected_error: true
         }]
     })));
 }
