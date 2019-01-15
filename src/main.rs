@@ -2,12 +2,15 @@
 extern crate nom;
 
 use std::fs;
+use std::env;
 
 mod parser;
 
 fn main() {
+    // Get log file location from arguments
+    let filename = env::args().nth(1).expect("No filename supplied");
     // Load the file into a &str
-    let file_contents = fs::read_to_string("../Testbed_Log.log").unwrap();
+    let file_contents = fs::read_to_string(filename).unwrap();
     // Run the nom parser over the string
     let transmissions = parser::get_transmissions(&file_contents);
     // Count the total number of attempts
