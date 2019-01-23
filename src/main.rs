@@ -24,5 +24,5 @@ fn main() {
 
     println!("Got {} transmissions. There were {} attempts which means that the average number of attempts per transmission was {}.", transmissions.len(), attempts, attempts as f64/transmissions.len() as f64);
     println!("There were also {} undetected errors, where the codec did not detect an error but the comparison engine did.", undetected_errors);
-    println!("Therefore the residual BER was {}.", undetected_errors as f64/transmissions.len() as f64);
+    println!("Therefore the residual BER was {}.", 100.0 * undetected_errors as f64 / attempts as f64);
 }
